@@ -1,0 +1,1 @@
+The code was setup and running on the Google Colaboratory (a free online python computing cluster) since I had some problems to install the JMI R package in Python interface in my local computer. 

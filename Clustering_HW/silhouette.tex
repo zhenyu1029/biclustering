@@ -1,0 +1,230 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Cluster: Silhouette and C-index},
+  pdfauthor={Haiwei Zhou},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Cluster: Silhouette and C-index}
+\author{Haiwei Zhou}
+\date{2023-03-29}
+
+\begin{document}
+\maketitle
+
+\hypertarget{prepare-dataset}{%
+\section{Prepare Dataset}\label{prepare-dataset}}
+
+Monthly CNG Usage data is divided by the number of meters and the area
+of the building. The dataset we use covers data from 2017 till 2022. The
+data is log-transformed after adding a small positive constant: the 1\%
+quantile of positive values in the dataset which is
+\(3.5\times10^{-5}\).
+
+\hypertarget{clustering-using-kmeans-method-with-c-index-and-silhouette-index}{%
+\section{Clustering Using Kmeans Method, with C-index and Silhouette
+Index}\label{clustering-using-kmeans-method-with-c-index-and-silhouette-index}}
+
+The number of clusters are selected by silhouette index (from -1 to 1
+and the closer to 1 the better) and C-index (The smaller the better).
+There are some missing values in the result of silhouette index because
+if some cluster including only ONE account exists, the calculation of
+silhouette index would return NaN. (Divided by 0 in the procedure)
+
+\includegraphics{silhouette_files/figure-latex/kmeans-1.pdf}
+\includegraphics{silhouette_files/figure-latex/kmeans-2.pdf}
+\includegraphics{silhouette_files/figure-latex/kmeans-3.pdf}
+\includegraphics{silhouette_files/figure-latex/kmeans-4.pdf}
+\includegraphics{silhouette_files/figure-latex/kmeans-5.pdf}
+\includegraphics{silhouette_files/figure-latex/kmeans-6.pdf}
+
+\newpage
+
+\hypertarget{plot-of-2-clusters}{%
+\section{Plot of 2 clusters}\label{plot-of-2-clusters}}
+
+\includegraphics{silhouette_files/figure-latex/cluster2-1.pdf}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.445. The number of cluster is 2"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.094. The number of cluster is 2"
+\end{verbatim}
+
+04000105887448 MANSFIELD APTS BLDG 13 (4 UNITS) 04000105674440 HILLTOP
+APT-COMMUNITY CENTER BLDG\#3
+
+\newpage
+
+\hypertarget{plot-of-3-clusters}{%
+\section{Plot of 3 clusters}\label{plot-of-3-clusters}}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.304. The number of cluster is 3"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.08. The number of cluster is 3"
+\end{verbatim}
+
+\includegraphics{silhouette_files/figure-latex/cluster3-1.pdf}
+
+\newpage
+
+\hypertarget{plot-of-4-clusters}{%
+\section{Plot of 4 clusters}\label{plot-of-4-clusters}}
+
+\includegraphics{silhouette_files/figure-latex/cluster4-1.pdf}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.258. The number of cluster is 4"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.094. The number of cluster is 4"
+\end{verbatim}
+
+\newpage
+
+\hypertarget{plot-of-5-clusters}{%
+\section{Plot of 5 clusters}\label{plot-of-5-clusters}}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.253. The number of cluster is 5"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.072. The number of cluster is 5"
+\end{verbatim}
+
+\includegraphics{silhouette_files/figure-latex/cluster5-1.pdf}
+
+\newpage
+
+\hypertarget{plot-of-6-clusters}{%
+\section{Plot of 6 clusters}\label{plot-of-6-clusters}}
+
+\includegraphics{silhouette_files/figure-latex/cluster6-1.pdf}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.246. The number of cluster is 6"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.078. The number of cluster is 6"
+\end{verbatim}
+
+\newpage
+
+\hypertarget{plot-of-7-clusters}{%
+\section{Plot of 7 clusters}\label{plot-of-7-clusters}}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.214. The number of cluster is 7"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.079. The number of cluster is 7"
+\end{verbatim}
+
+\includegraphics{silhouette_files/figure-latex/cluster7-1.pdf}
+
+\newpage
+
+\hypertarget{plot-of-8-clusters}{%
+\section{Plot of 8 clusters}\label{plot-of-8-clusters}}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.213. The number of cluster is 8"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.069. The number of cluster is 8"
+\end{verbatim}
+
+\includegraphics{silhouette_files/figure-latex/cluster8-1.pdf}
+
+\newpage
+
+\hypertarget{plot-of-9-clusters}{%
+\section{Plot of 9 clusters}\label{plot-of-9-clusters}}
+
+\includegraphics{silhouette_files/figure-latex/cluster9-1.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-2.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-3.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-4.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-5.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-6.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-7.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-8.pdf}
+\includegraphics{silhouette_files/figure-latex/cluster9-9.pdf}
+
+\begin{verbatim}
+## [1] "The Silhouetteindex is 0.206. The number of cluster is 9"
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "The C-index is 0.061. The number of cluster is 9"
+\end{verbatim}
+
+\end{document}
